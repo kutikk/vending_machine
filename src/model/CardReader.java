@@ -5,10 +5,10 @@ public class CardReader {
     private String tempPassword;
     private int cash;
 
-    public CardReader(String cardNumber, String tempPassword, int cash) {
+    public CardReader(String cardNumber, String tempPassword) {
         this.cardNumber = cardNumber;
         this.tempPassword = tempPassword;
-        this.cash = cash;
+        this.cash = 1000;
     }
 
     public String getCardNumber() {
@@ -34,4 +34,6 @@ public class CardReader {
     public void setCash(int cash) {
         this.cash = cash;
     }
+
+
 }
