@@ -12,6 +12,7 @@ public class AppRunner {
     private final CoinAcceptor coinAcceptor;
 
     private static boolean isExit = false;
+    private static boolean isAddBalance = false;
 
     private AppRunner() {
         products.addAll(new Product[]{
@@ -23,6 +24,7 @@ public class AppRunner {
                 new Pistachios(ActionLetter.G, 130)
         });
         coinAcceptor = new CoinAcceptor(100);
+
     }
 
     public static void run() {
@@ -33,14 +35,13 @@ public class AppRunner {
     }
 
     private void startSimulation() {
-        print("В автомате доступны:");
-        showProducts(products);
 
-        print("Монет на сумму: " + coinAcceptor.getAmount());
-
-        UniversalArray<Product> allowProducts = new UniversalArrayImpl<>();
-        allowProducts.addAll(getAllowedProducts().toArray());
-        chooseAction(allowProducts);
+                print("В автомате доступны:");
+                showProducts(products);
+                print("Монет на сумму: " + coinAcceptor.getAmount());
+                UniversalArray<Product> allowProducts = new UniversalArrayImpl<>();
+                allowProducts.addAll(getAllowedProducts().toArray());
+                chooseAction(allowProducts);
 
     }
 
@@ -50,13 +51,18 @@ public class AppRunner {
             if (coinAcceptor.getAmount() >= products.get(i).getPrice()) {
                 allowProducts.add(products.get(i));
             }
+
         }
         return allowProducts;
     }
 
+
     private void chooseAction(UniversalArray<Product> products) {
+
         showActions(products);
         print(" h - Выйти");
+        print("a - Пополнить баланс");
+
         String action = fromConsole().substring(0, 1);
         try {
             for (int i = 0; i < products.size(); i++) {
@@ -67,6 +73,9 @@ public class AppRunner {
                 } else if ("h".equalsIgnoreCase(action)) {
                     isExit = true;
                     break;
+                } else if ("a".equalsIgnoreCase(action)) {
+                   addBalance(coinAcceptor);
+                   break;
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -74,8 +83,37 @@ public class AppRunner {
             chooseAction(products);
         }
 
+    }
+
+
+
+
+    private void addBalance(CoinAcceptor coinAcceptor){
+        System.out.println("Выберите способ пополнения баланса");
+        String chooseBalance = fromConsole();
+        switch (chooseBalance){
+            case "1":
+                System.out.print("Введите номер карты в формате - #### #### #### #### ");
+                String cardNum = fromConsole();
+                System.out.println();
+                System.out.println("Введите временный пароль - ");
+                String tempPassword = fromConsole();
+                CardReader card = new CardReader(cardNum,tempPassword);
+                int money =  coinAcceptor.getAmount()+card.getCash();
+                coinAcceptor.setAmount(money);
+                System.out.println("Карта баланс пополнен на "+card.getCash());
+            case "2":
+                Scanner sc = new Scanner(System.in);
+                System.out.println("Вводите монеты!");
+                int coin = sc.nextInt();
+                coin = coinAcceptor.getAmount()+coin;
+                coinAcceptor.setAmount(coin);
+        }
 
     }
+
+
+
 
     private void showActions(UniversalArray<Product> products) {
         for (int i = 0; i < products.size(); i++) {
