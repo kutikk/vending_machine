@@ -1,6 +1,7 @@
 package enums;
 
 public enum ActionLetter {
+    A("a"),
     B("b"),
     C("c"),
     D("d"),
