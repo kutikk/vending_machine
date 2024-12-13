@@ -57,29 +57,45 @@ public class AppRunner {
 
 
     private void chooseAction(UniversalArray<Product> products) {
+<<<<<<< HEAD
 
+=======
+        print(" a - Пополнить баланс");
+>>>>>>> 768a0feb2277a4efdb55c9ce3ec2b793a32307ed
         showActions(products);
         print(" h - Выйти");
         print("a - Пополнить баланс");
 
         String action = fromConsole().substring(0, 1);
+        if ("a".equalsIgnoreCase(action)) {
+            coinAcceptor.setAmount(coinAcceptor.getAmount() + 10);
+            print("Вы пополнили баланс на 10");
+            return;
+        }
         try {
             for (int i = 0; i < products.size(); i++) {
                 if (products.get(i).getActionLetter().equals(ActionLetter.valueOf(action.toUpperCase()))) {
                     coinAcceptor.setAmount(coinAcceptor.getAmount() - products.get(i).getPrice());
                     print("Вы купили " + products.get(i).getName());
                     break;
+<<<<<<< HEAD
                 } else if ("h".equalsIgnoreCase(action)) {
                     isExit = true;
                     break;
                 } else if ("a".equalsIgnoreCase(action)) {
                    addBalance(coinAcceptor);
                    break;
+=======
+>>>>>>> 768a0feb2277a4efdb55c9ce3ec2b793a32307ed
                 }
             }
         } catch (IllegalArgumentException e) {
-            print("Недопустимая буква. Попрбуйте еще раз.");
-            chooseAction(products);
+            if ("h".equalsIgnoreCase(action)) {
+                isExit = true;
+            } else {
+                print("Недопустимая буква. Попрбуйте еще раз.");
+                chooseAction(products);
+            }
         }
 
     }
