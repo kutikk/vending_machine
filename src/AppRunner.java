@@ -3,6 +3,7 @@ import model.*;
 import util.UniversalArray;
 import util.UniversalArrayImpl;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AppRunner {
@@ -57,36 +58,27 @@ public class AppRunner {
 
 
     private void chooseAction(UniversalArray<Product> products) {
-<<<<<<< HEAD
 
-=======
-        print(" a - Пополнить баланс");
->>>>>>> 768a0feb2277a4efdb55c9ce3ec2b793a32307ed
         showActions(products);
         print(" h - Выйти");
         print("a - Пополнить баланс");
-
         String action = fromConsole().substring(0, 1);
-        if ("a".equalsIgnoreCase(action)) {
-            coinAcceptor.setAmount(coinAcceptor.getAmount() + 10);
-            print("Вы пополнили баланс на 10");
-            return;
-        }
         try {
             for (int i = 0; i < products.size(); i++) {
                 if (products.get(i).getActionLetter().equals(ActionLetter.valueOf(action.toUpperCase()))) {
                     coinAcceptor.setAmount(coinAcceptor.getAmount() - products.get(i).getPrice());
                     print("Вы купили " + products.get(i).getName());
                     break;
-<<<<<<< HEAD
                 } else if ("h".equalsIgnoreCase(action)) {
                     isExit = true;
                     break;
                 } else if ("a".equalsIgnoreCase(action)) {
                    addBalance(coinAcceptor);
                    break;
-=======
->>>>>>> 768a0feb2277a4efdb55c9ce3ec2b793a32307ed
+
+                }
+                if (coinAcceptor.getAmount()<=0){
+                    addBalance(coinAcceptor);
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -95,6 +87,8 @@ public class AppRunner {
             } else {
                 print("Недопустимая буква. Попрбуйте еще раз.");
                 chooseAction(products);
+                e.getMessage();
+                e.printStackTrace();
             }
         }
 
@@ -103,32 +97,35 @@ public class AppRunner {
 
 
 
-    private void addBalance(CoinAcceptor coinAcceptor){
-        System.out.println("Выберите способ пополнения баланса");
+    private void addBalance(CoinAcceptor coinAcceptor) {
+        System.out.println("Выберите способ пополнения баланса: 1 - Оплата картой \n2 - Оплата монетами");
         String chooseBalance = fromConsole();
-        switch (chooseBalance){
+        switch (chooseBalance) {
             case "1":
-                System.out.print("Введите номер карты в формате - #### #### #### #### ");
+                System.out.print("Введите номер карты в формате - #### #### #### ####: ");
                 String cardNum = fromConsole();
-                System.out.println();
-                System.out.println("Введите временный пароль - ");
+                System.out.println("Введите временный пароль: ");
                 String tempPassword = fromConsole();
-                CardReader card = new CardReader(cardNum,tempPassword);
-                int money =  coinAcceptor.getAmount()+card.getCash();
-                coinAcceptor.setAmount(money);
-                System.out.println("Карта баланс пополнен на "+card.getCash());
+                CardReader card = new CardReader(cardNum, tempPassword);
+                int newBalance = coinAcceptor.getAmount() + card.getCash();
+                coinAcceptor.setAmount(newBalance);
+                System.out.println("Карта баланс пополнен на " + card.getCash());
+                break;
             case "2":
-                Scanner sc = new Scanner(System.in);
                 System.out.println("Вводите монеты!");
-                int coin = sc.nextInt();
-                coin = coinAcceptor.getAmount()+coin;
-                coinAcceptor.setAmount(coin);
+                try {
+                    Scanner sc = new Scanner(System.in);
+                    int coin = sc.nextInt();
+                    coinAcceptor.setAmount(coinAcceptor.getAmount() + coin);
+                    System.out.println("Баланс пополнен на " + coin);
+                } catch (InputMismatchException e) {
+                    System.out.println("Ошибка: введите целое число.");
+                }
+                break;
+            default:
+                System.out.println("Неверный выбор. Попробуйте снова.");
         }
-
     }
-
-
-
 
     private void showActions(UniversalArray<Product> products) {
         for (int i = 0; i < products.size(); i++) {
