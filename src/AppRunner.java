@@ -12,7 +12,6 @@ public class AppRunner {
     private final CoinAcceptor coinAcceptor;
 
     private static boolean isExit = false;
-    private static boolean isAddBalance = false;
 
     private AppRunner() {
         products.addAll(new Product[]{
